@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-900 font-body px-5 text-white;
+  }
+}
+@layer components {
+  .page-container {
+    max-width: 1280px;
+    @apply mx-auto;
+  }
+
+  .banner .swiper {
+    height: 100%;
+  }
+  .movie-list .swiper-slide {
+    width: 300px;
+    height: auto;
+  }
+}
+
+/// swiper Similar Movies
+.swiper-pagination .swiper-pagination-bullet {
+  background-color: #ffffff;
+  width: 10px;
+  height: 10px;
+}
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  width: 18px;
+  background-color: #ee3131;
+  border-radius: 5px;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  color: #fff !important;
+}
+.swiper-button-prev:active,
+.swiper-button-next:active {
+  color: #ee3131 !important;
+}
+
+// react- Pagination
