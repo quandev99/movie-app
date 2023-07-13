@@ -1,11 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
-import { apiKey, fetcher } from "../config";
-import MovieDetailBanner from "../components/movie-details/MovieDetailBanner";
-import MovieCredits from "../components/movie-details/MovieCredits";
-import MovieSimilar from "../components/movie-details/MovieSimilar";
-import MovieTrailer from "../components/movie-details/MovieTrailer";
+import { apiKey, fetcher } from "@/apiConfig/config";
+import MovieDetailBanner from "@/components/movie-details/MovieDetailBanner";
+import MovieCredits from "@/components/movie-details/MovieCredits";
+import MovieSimilar from "@/components/movie-details/MovieSimilar";
+import MovieTrailer from "@/components/movie-details/MovieTrailer";
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const { data, error } = useSWR(

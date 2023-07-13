@@ -1,11 +1,12 @@
 import React from "react";
+import { tmdbAPI } from "@/apiConfig/config";
 
 const CreditsItem = ({ item }) => {
   const { profile_path, name, character } = item;
   return (
     <div className="cast-item mb-5">
       <img
-        src={`https://image.tmdb.org/t/p/original/${profile_path}`}
+        src={tmdbAPI.imageOriginal(profile_path)}
         className=" h-[250px] w-full rounded-lg border-2 border-[#252229] object-cover "
         alt=""
       />

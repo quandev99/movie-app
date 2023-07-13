@@ -1,5 +1,5 @@
 import React from "react";
-import { apiKey, fetcher } from "../../config";
+import { fetcher, tmdbAPI } from "@/apiConfig/config";
 import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import { SwiperSlide, Swiper } from "swiper/react";
@@ -9,16 +9,13 @@ import "swiper/scss/navigation";
 import MovieCart from "../movie/MovieCart";
 const MovieSimilar = () => {
   const { movieId } = useParams();
-  const { data } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${apiKey}`,
-    fetcher
-  );
+  const { data } = useSWR(tmdbAPI.getMovieMeta(movieId, "similar"), fetcher);
   if (!data) return null;
   const { results } = data;
   if (!results || results.length <= 0) return null;
   return (
     <>
-      <h2 className="my-6 text-white text-2xl font-bold lg:mb-10 2xl:text-3xl">
+      <h2 className="my-6 text-2xl font-bold text-white lg:mb-10 2xl:text-3xl">
         Similar Movies
       </h2>
       <div className="movies-list ">
@@ -42,7 +39,7 @@ const MovieSimilar = () => {
           spaceBetween={10}
           slidesPerGroup={5}
           loop={true}
-          loopFillGroupWithBlank={true}
+          loopfillgroupwithblank="true"
           pagination={{
             clickable: true,
           }}

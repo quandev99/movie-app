@@ -1,32 +1,18 @@
 import React from "react";
 import { PropTypes } from "prop-types";
 import { useNavigate } from "react-router-dom";
+import Button from "../button/Button";
+import { tmdbAPI } from "@/apiConfig/config";
+import { withErrorBoundary } from "react-error-boundary";
 
 const MovieCart = ({ item, truncate }) => {
-  const {
-    adult,
-    backdrop_path,
-    genre_ids,
-    id,
-    original_language,
-    original_title,
-    overview,
-    popularity,
-    poster_path,
-    release_date,
-    title,
-    video,
-    vote_average,
-    vote_count,
-  } = item;
+  const { id, poster_path, release_date, title, vote_average } = item;
   const navigate = useNavigate();
-  // const handleNavigate = () => {
-  //   navigate(`/movies/${id}`);
-  // };
+
   return (
-    <div className="movie-cart flex flex-col rounded-lg p-3 bg-slate-800 text-white h-full select-none">
+    <div className="flex flex-col h-full p-3 text-white rounded-lg select-none movie-cart bg-slate-800">
       <img
-        src={`https://image.tmdb.org/t/p/original${poster_path}`}
+        src={tmdbAPI.imageOriginal(poster_path)}
         alt=""
         className="w-full h-[250px] object-cover rounded-lg mb-5"
       />
@@ -34,7 +20,7 @@ const MovieCart = ({ item, truncate }) => {
         <h3 className={` text-xl mb-3 font-bold ${truncate ? "truncate" : ""}`}>
           {title}
         </h3>
-        <div className="flex flex-item justify-between text-sm  mb-10">
+        <div className="flex justify-between mb-10 text-sm flex-item">
           <span className="opacity-50">
             {new Date(release_date).getFullYear()}
           </span>
@@ -45,7 +31,7 @@ const MovieCart = ({ item, truncate }) => {
               fill="currentColor"
               strokeWidth="0"
               viewBox="0 0 1024 1024"
-              className="ml-1 inline-block text-xl text-yellow-500"
+              className="inline-block ml-1 text-xl text-yellow-500"
               height="1em"
               width="1em"
               xmlns="http://www.w3.org/2000/svg"
@@ -54,43 +40,45 @@ const MovieCart = ({ item, truncate }) => {
             </svg>
           </span>
         </div>
-        <button
-          onClick={() => navigate(`/movies/${id}`)}
-          className="py-3 px-6 rounded-lg capitalize bg-primary w-full mt-auto"
-        >
+        <Button onClick={() => navigate(`/movies/${id}`)}>
           Watch now
           <svg
             stroke="currentColor"
             fill="currentColor"
             strokeWidth="0"
             viewBox="0 0 16 16"
-            className="ml-1 inline-block text-xl"
+            className="inline-block ml-1 text-xl"
             height="1em"
             width="1em"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"></path>
           </svg>
-        </button>
+        </Button>
       </div>
     </div>
   );
 };
 
 MovieCart.propTypes = {
-  adult: PropTypes.bool,
-  backdrop_path: PropTypes.string,
-  genre_ids: PropTypes.any,
-  id: PropTypes.number,
-  original_language: PropTypes.any,
-  original_title: PropTypes.string,
-  overview: PropTypes.any,
-  popularity: PropTypes.any,
-  poster_path: PropTypes.any,
-  release_date: PropTypes.any,
-  title: PropTypes.string,
-  video: PropTypes.any,
-  vote_average: PropTypes.number,
+  item: PropTypes.shape({
+    id: PropTypes.number,
+    poster_path: PropTypes.string,
+    release_date: PropTypes.string,
+    title: PropTypes.string,
+    vote_average: PropTypes.number,
+  }),
+  truncate: PropTypes.bool,
 };
 
-export default MovieCart;
+function FallbackRender() {
+  return (
+    <p className="bg-red-50 text-red-500">
+      Some went wrong with this Component!
+    </p>
+  );
+}
+
+export default withErrorBoundary(MovieCart, {
+  FallbackRender,
+});

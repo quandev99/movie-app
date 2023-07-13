@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import MovieList from "../components/movie/MovieList";
+import MovieList from "@/components/movie/MovieList";
 
 const HomePage = () => {
   return (
@@ -8,7 +8,7 @@ const HomePage = () => {
         <h2 className="capitalize text-white pb-10 text-3xl font-bold ">
           Now playing
         </h2>
-        <MovieList></MovieList>
+        <MovieList type="now_playing"></MovieList>
       </section>
       <section className="movie-layout page-container pb-20">
         <h2 className="capitalize text-white pb-10 text-3xl font-bold ">

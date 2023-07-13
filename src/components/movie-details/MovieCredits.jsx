@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { apiKey, fetcher } from "../../config";
+import { apiKey, fetcher, tmdbAPI } from "@/apiConfig/config";
 import useSWR from "swr";
 import CreditsItem from "./CreditsItem";
 import { SwiperSlide, Swiper } from "swiper/react";
@@ -11,7 +11,7 @@ import "swiper/scss/navigation";
 const MovieCredits = () => {
   const { movieId } = useParams();
   const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey}`,
+    tmdbAPI.getMovieMeta(movieId, "credits"),
     fetcher
   );
   if (!data) return null;
@@ -19,7 +19,7 @@ const MovieCredits = () => {
   if (!cast || cast.length <= 0) return null;
   return (
     <div className="py-10">
-      <h1 className="text-2xl font-bold mb-5">Top Billed Cast</h1>
+      <h1 className="mb-5 text-2xl font-bold">Top Billed Cast</h1>
       <Swiper
         breakpoints={{
           // when window width is >= 640px
@@ -39,7 +39,7 @@ const MovieCredits = () => {
         }}
         spaceBetween={10}
         loop={true}
-        loopFillGroupWithBlank={true}
+        loopfillgroupwithblank="true"
         pagination={{
           clickable: true,
         }}

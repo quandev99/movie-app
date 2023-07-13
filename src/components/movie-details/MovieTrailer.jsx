@@ -1,26 +1,21 @@
-import React from "react";
 import { useParams } from "react-router-dom";
-import { apiKey, fetcher } from "../../config";
+import { fetcher, tmdbAPI } from "@/apiConfig/config";
 import useSWR from "swr";
 const MovieTrailer = () => {
   const { movieId } = useParams();
-  const { data, error } = useSWR(
-    `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${apiKey}`,
-    fetcher
-  );
+  const { data } = useSWR(tmdbAPI.getMovieMeta(movieId, "videos"), fetcher);
   if (!data) return null;
   const { results } = data;
-  if (!results && results.length <= 0) return null;
-  console.log(results);
+  if (!results && results?.length <= 0) return null;
   return (
-    <div className="py-10 w-full">
+    <div className="w-full py-10">
       <div className="flex flex-col gap-10">
-        {results.slice(0, 1).map((item) => (
+        {results?.slice(0, 1).map((item) => (
           <div className="w-full text-center " key={item.id}>
-            <h3 className="text-2xl font-medium text-primary py-4 px-5 bg-[#2b2554] hover:bg-[#6f5cf1] rounded-lg inline-block mb-5">
+            <h3 className="text-2xl font-medium text-primary py-4 px-5 bg-[#5244ae] hover:bg-secondary rounded-lg inline-block mb-5">
               {item.name}
             </h3>
-            <div className="w-full aspect-video p-10" key={item.id}>
+            <div className="w-full p-10 aspect-video" key={item.id}>
               <iframe
                 width="699"
                 height="393"
@@ -28,8 +23,8 @@ const MovieTrailer = () => {
                 title={item.name}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-                className="w-full h-full object-fill"
+                allowFullScreen
+                className="object-fill w-full h-full"
               ></iframe>
             </div>
           </div>

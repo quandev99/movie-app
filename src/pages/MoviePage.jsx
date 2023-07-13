@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
-import { apiKey, fetcher } from "../config";
-import MovieCart from "../components/movie/MovieCart";
-import useDebounce from "../hooks/useDebounce";
+import { fetcher, tmdbAPI } from "@/apiConfig/config";
+import MovieCart from "@/components/movie/MovieCart";
+import useDebounce from "@/hooks/useDebounce";
 import ReactPaginate from "react-paginate";
 const itemsPerPage = 20;
 const MoviePage = () => {
@@ -12,36 +12,29 @@ const MoviePage = () => {
   /// fetching data movie
   const [nextPage, setNextPage] = useState(1);
   const [filter, setFilter] = useState("");
-  const [url, setUrl] = useState(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${nextPage}`
-  );
+  const [url, setUrl] = useState(tmdbAPI.getMovieList("popular", nextPage));
   const filterDebounce = useDebounce(filter, 1000);
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
   const { data, error, isLoading } = useSWR(url, fetcher);
-  const loading = !data && !isLoading && !error;
-  console.log(loading);
+  const loading = !data && !error;
   useEffect(() => {
     if (filterDebounce) {
-      setUrl(
-        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${filterDebounce}&page=${nextPage}`
-      );
+      setUrl(tmdbAPI.getMovieSearch(filterDebounce, nextPage));
     } else {
-      setUrl(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&page=${nextPage}`
-      );
+      setUrl(tmdbAPI.getMovieList("popular", nextPage));
     }
   }, [filterDebounce, nextPage]);
   const movies = data?.results || [];
 
   useEffect(() => {
-    if (!data || !data.total_pages) return;
-    setPageCount(Math.ceil(data.total_pages / itemsPerPage));
+    if (!data || !data.total_results) return;
+    setPageCount(Math.ceil(data.total_results / itemsPerPage));
   }, [data, itemOffset]);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % data.total_pages;
+    const newOffset = (event.selected * itemsPerPage) % data.total_results;
 
     setItemOffset(newOffset);
     setNextPage(event.selected + 1);
@@ -53,12 +46,12 @@ const MoviePage = () => {
         <div className="flex-1">
           <input
             type="text"
-            className="w-full p-4 bg-slate-800 text-white rounded-sm outline-none"
+            className="w-full p-4 text-white rounded-sm outline-none bg-slate-800"
             placeholder="Type here to search ..."
             onChange={handleFilterChange}
           />
         </div>
-        <button className="p-4 bg-primary text-white">
+        <button className="p-4 text-white bg-primary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -76,7 +69,7 @@ const MoviePage = () => {
         </button>
       </div>
       {loading && (
-        <div className="w-10 h-10 rounded-full border-4 border-primary border-t-transparent border-t-4 mx-auto animate-spin"></div>
+        <div className="w-10 h-10 mx-auto border-4 border-t-4 rounded-full border-primary border-t-transparent animate-spin"></div>
       )}
       <div className="grid grid-cols-4 gap-10">
         {!loading &&
