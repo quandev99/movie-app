@@ -4,6 +4,10 @@ import { fetcher, tmdbAPI } from "@/apiConfig/config";
 import MovieCart from "@/components/movie/MovieCart";
 import useDebounce from "@/hooks/useDebounce";
 import ReactPaginate from "react-paginate";
+import MovieCartSkeleton from "@/components/loading/MovieCartSkeleton";
+import { v4 } from "uuid";
+import Button from "@/components/button/Button";
+import useSWRInfinite from "swr/infinite";
 const itemsPerPage = 20;
 const MoviePage = () => {
   // paginate
@@ -69,7 +73,16 @@ const MoviePage = () => {
         </button>
       </div>
       {loading && (
-        <div className="w-10 h-10 mx-auto border-4 border-t-4 rounded-full border-primary border-t-transparent animate-spin"></div>
+        <div className="w-10 h-10 mx-auto mb-10 border-4 border-t-4 rounded-full border-primary border-t-transparent animate-spin"></div>
+      )}
+      {loading && (
+        <>
+          <div className="grid grid-cols-4 gap-10">
+            {new Array(itemsPerPage).fill(0).map((item, index) => (
+              <MovieCartSkeleton key={`${index} ${v4()}`}></MovieCartSkeleton>
+            ))}
+          </div>
+        </>
       )}
       <div className="grid grid-cols-4 gap-10">
         {!loading &&
@@ -77,6 +90,9 @@ const MoviePage = () => {
           movies.map((item) => (
             <MovieCart key={item.id} item={item}></MovieCart>
           ))}
+      </div>
+      <div className="mt-10 text-center">
+        <Button bgColor="secondary">Load More</Button>
       </div>
       <div className="mt-10">
         <ReactPaginate

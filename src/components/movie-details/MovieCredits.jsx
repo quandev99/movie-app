@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { apiKey, fetcher, tmdbAPI } from "@/apiConfig/config";
+import { fetcher, tmdbAPI } from "@/apiConfig/config";
 import useSWR from "swr";
 import CreditsItem from "./CreditsItem";
 import { SwiperSlide, Swiper } from "swiper/react";
@@ -20,6 +20,7 @@ const MovieCredits = () => {
   return (
     <div className="py-10">
       <h1 className="mb-5 text-2xl font-bold">Top Billed Cast</h1>
+
       <Swiper
         breakpoints={{
           // when window width is >= 640px
